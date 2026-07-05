@@ -1,4 +1,4 @@
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { SidebarNav, type SectionId } from "./components/SidebarNav";
 import { escalations, runbooks } from "./data/mockData";
 import type { Severity } from "./types/models";
@@ -27,6 +27,28 @@ const AutomationScreen = lazy(() =>
 const DecisionBriefScreen = lazy(() =>
   import("./screens/DecisionBriefScreen").then((module) => ({ default: module.DecisionBriefScreen })),
 );
+
+const sectionPrefetchers: Record<SectionId, () => Promise<unknown>> = {
+  "mission-control": () => import("./screens/MissionControlScreen"),
+  escalations: () => import("./screens/EscalationsScreen"),
+  runbooks: () => import("./screens/RunbooksScreen"),
+  coverage: () => import("./screens/CoverageScreen"),
+  tooling: () => import("./screens/ToolingScreen"),
+  metrics: () => import("./screens/MetricsScreen"),
+  automation: () => import("./screens/AutomationScreen"),
+  "decision-brief": () => import("./screens/DecisionBriefScreen"),
+};
+
+const likelyNextSections: Record<SectionId, SectionId[]> = {
+  "mission-control": ["escalations", "coverage"],
+  escalations: ["decision-brief", "metrics"],
+  runbooks: ["escalations", "coverage"],
+  coverage: ["metrics", "automation"],
+  tooling: ["metrics", "escalations"],
+  metrics: ["automation", "decision-brief"],
+  automation: ["metrics", "coverage"],
+  "decision-brief": ["escalations", "metrics"],
+};
 
 const sectionTitle: Record<SectionId, string> = {
   "mission-control": "Mission Control",
@@ -59,6 +81,42 @@ function App() {
   }, []);
 
   const [runbookStateByEscalation, setRunbookStateByEscalation] = useState(initialRunbookState);
+  const prefetched = useRef<Set<SectionId>>(new Set());
+
+  useEffect(() => {
+    const targets: SectionId[] = ["escalations", "coverage", "decision-brief", "metrics"];
+    const loadTargets = () => {
+      targets.forEach((id) => {
+        if (prefetched.current.has(id)) return;
+        prefetched.current.add(id);
+        void sectionPrefetchers[id]();
+      });
+    };
+
+    const requestIdle = (window as Window & { requestIdleCallback?: (cb: () => void) => number }).requestIdleCallback;
+    if (requestIdle) {
+      const idleId = requestIdle(loadTargets);
+      return () => {
+        const cancelIdle = (
+          window as Window & { cancelIdleCallback?: (id: number) => void }
+        ).cancelIdleCallback;
+        cancelIdle?.(idleId);
+      };
+    }
+
+    const timeoutId = window.setTimeout(loadTargets, 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    const likelyNext = likelyNextSections[activeSection];
+
+    likelyNext.forEach((id) => {
+      if (prefetched.current.has(id)) return;
+      prefetched.current.add(id);
+      void sectionPrefetchers[id]();
+    });
+  }, [activeSection]);
 
   const toggleRunbookStep = (escalationId: string, stepId: string) => {
     setRunbookStateByEscalation((current) => ({
