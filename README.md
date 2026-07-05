@@ -1,146 +1,97 @@
-# Incident Response Manager - Automation-First Demo
+# Enforcement Response Command Center
 
-This repository is a creative application project for an Incident Response Manager role.
+A polished frontend prototype that demonstrates how an Incident Response Manager can run a high-stakes Trust and Safety enforcement operation with clear on-call ownership, sensitive escalation coordination, and leadership-ready communication.
 
-It demonstrates how to automate:
+## What this prototype demonstrates
 
-- on-call triage and routing
-- auto-assignment and ticket enrichment
-- compliance signal checks (NCMEC / EU DSA style flags)
-- runbook update suggestions from incident patterns
-- near-real-time reporting outputs for leadership dashboards
+- Mission Control view for real-time operational posture
+- Active escalation console with decision framing and stakeholder alignment
+- Decision brief generation for executive communication under pressure
+- Runbook and SOP ownership with contextual checklist progress
+- Coverage risk visibility and staffing recommendation logic
+- Tooling issue triage and engineering follow-up tracking
+- Metrics and trend reporting for leadership context
+- Automation backlog with impact scoring and maturity roadmap
 
-## Hiring Manager Start Here
+All incident data is fictional and sanitized.
 
-If you only have 2 minutes, review in this order:
+## Tech stack
 
-1. Live UI dashboard (Vercel project URL)
-2. `docs/APPLICATION_MESSAGE.md`
-3. `docs/INCIDENT_COMMANDER_PACKET.md`
-4. `docs/ONCALL_RUNBOOK_AND_SOPS.md`
-5. `docs/SECURITY_MODEL.md`
-
-What this demonstrates quickly:
-
-- I can run cross-functional escalations under pressure.
-- I can reduce repetitive toil through safe automation.
-- I build systems that are auditable, policy-aligned, and regulator-ready.
-
-## Why this project exists
-
-The goal is to show operator judgment and process maturity, not just code.
-Every artifact maps directly to responsibilities found in trust and safety escalation roles:
-
-- on-call program ownership
-- cross-functional escalation coordination
-- automation and program maturity
-- reporting and operational health visibility
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React
+- Recharts
+- Local mock data only (no backend)
 
 ## Project structure
 
-- `src/incident_manager.py` - core triage, routing, enrichment, compliance checks, and metrics
-- `scripts/run_demo.py` - demo runner that processes sample incidents and writes outputs
-- `data/incidents.sample.jsonl` - synthetic sample incident stream
-- `docs/` - runbooks, SOP logic, dashboard blueprint, and application narrative
-- `outputs/` - generated artifacts after running the demo
-- `ui/` - static dashboard UI for quick visual demo
+- `ui/src/App.tsx` - app shell and section navigation
+- `ui/src/screens/` - all command-center screens
+- `ui/src/components/` - reusable UI components
+- `ui/src/data/mockData.ts` - fictional operational datasets
+- `ui/src/data/selectors.ts` - derived metrics and confidence calculations
+- `ui/src/types/models.ts` - typed data contracts
+- `docs/` - supporting governance and operational artifacts
 
-## Quick start
-
-1. Run the demo:
-
-```bash
-python scripts/run_demo.py
-```
-
-2. Review generated files:
-
-- `outputs/processed_incidents.json`
-- `outputs/dashboard_metrics.json`
-- `outputs/runbook_updates.md`
-
-To run the infraction-focused simulation:
+## Install dependencies
 
 ```bash
-python scripts/run_infractions_simulation.py
+cd ui
+npm install
 ```
 
-This also generates:
-
-- `outputs/infractions_simulation_trace.md`
-
-3. Open the UI dashboard locally:
+## Run locally
 
 ```bash
-python -m http.server 8000
+cd ui
+npm run dev
 ```
 
-Then navigate to `http://localhost:8000/ui/`.
+Then open the local Vite URL shown in terminal.
 
-## Vercel deploy
+## Build for production
 
-Use these project settings in Vercel:
+```bash
+cd ui
+npm run build
+```
 
-- Framework Preset: `Other`
-- Root Directory: `ui`
-- Build Command: `echo "no build"` (or leave blank)
-- Output Directory: `.` (or leave blank if your Vercel UI requires)
-- Install Command: leave blank
+## Demo flow
 
-Deploy steps:
+1. Open **Mission Control** and show on-call owner + coverage confidence.
+2. Review active sensitive escalations and leadership summary.
+3. Open **Escalations**, filter by severity, and select `ESC-1048`.
+4. Walk through Situation, Decision Frame, Stakeholders, Timeline, and Runbook checklist.
+5. Open **Decision Brief** and click **Generate Decision Brief**.
+6. Use **Copy Brief** to show communication readiness.
+7. Open **Coverage** and review gap detector + staffing recommendation.
+8. Open **Tooling** and filter issues by severity/status.
+9. Open **Metrics** and discuss trend and leadership narrative.
+10. Open **Automation** and sort the backlog by impact score.
 
-1. Push this repo to GitHub
-2. Import project in Vercel
-3. Apply the settings above and deploy
+## Mapping to job requirements
 
-The UI loads:
+| Job Requirement                    | Prototype Feature                           |
+| ---------------------------------- | ------------------------------------------- |
+| Own on-call rotations and coverage | Coverage dashboard and gap detector         |
+| Maintain runbooks and SOPs         | Runbook center and contextual checklists    |
+| Triage tooling issues              | Tooling health dashboard                    |
+| Report on volume and metrics       | Metrics and leadership reporting            |
+| Coordinate sensitive escalations   | Active escalation console                   |
+| Communicate clearly under pressure | Decision brief generator                    |
+| Track referral pathways            | Referral review status and volume dashboard |
+| Identify automation opportunities  | Automation backlog                          |
+| Improve program maturity           | Program maturity roadmap                    |
 
-- `sample-dashboard-metrics.json` by default in Vercel deployment
+## Additional artifacts
 
-## High-scrutiny review packet
+This repository also includes Python-based simulation artifacts and governance documents used to seed realistic operations context:
 
-The repository includes governance artifacts designed for security, policy, legal, and regulator review:
-
+- `scripts/run_demo.py`
+- `scripts/run_infractions_simulation.py`
+- `outputs/`
 - `docs/SECURITY_MODEL.md`
 - `docs/GOVERNANCE_CONTROLS.md`
 - `docs/MODEL_RISK_REGISTER.md`
-- `docs/REGULATOR_READY_DECISION_TEMPLATE.md`
-
-## Automation features included
-
-### 1) Routing and triage
-
-- priority scoring from severity hints + risk keywords
-- queue routing by incident class and urgency
-- auto-assignment using an on-call roster and queue ownership
-
-### 2) Ticket enrichment
-
-- severity rationale
-- impacted-surface summary
-- suggested stakeholders (Policy, Legal, Product, Comms)
-- previous-similar incident references
-
-### 3) Compliance assist
-
-- NCMEC-style signal matching (possible CSAM-related language)
-- EU DSA-style signal matching (systemic abuse / illegal content concerns)
-- human-in-the-loop recommendation with confidence and evidence
-
-### 4) Runbook maturity loop
-
-- detects repeated patterns by category and tag
-- proposes runbook additions or updates automatically
-- writes recommendations into an auditable markdown file
-
-### 5) Dashboard reporting
-
-- inbound volume and category mix
-- response-time proxy metrics
-- escalation rates and compliance-flag volume
-- staffing and queue pressure summaries
-
-## Notes
-
-- This is intentionally lightweight and self-contained (standard library only).
-- It is designed as an interview/demo artifact that can evolve into production workflows.

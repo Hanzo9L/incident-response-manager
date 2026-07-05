@@ -6,6 +6,11 @@ __pycache__/
 .venv/
 venv/
 
+# Node artifacts
+node_modules/
+ui/node_modules/
+ui/dist/
+
 # OS/editor noise
 .DS_Store
 Thumbs.db

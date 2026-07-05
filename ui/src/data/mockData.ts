@@ -1,0 +1,513 @@
+import type {
+  AutomationBacklogItem,
+  CoverageShift,
+  Escalation,
+  MetricsSnapshot,
+  Runbook,
+  ToolingIssue,
+} from "../types/models";
+
+export const onCallInfo = {
+  primary: "Maya Chen",
+  backup: "Jordan Lee",
+  shift: "Sat 6:00 PM to Sun 6:00 AM",
+  status: "Active",
+};
+
+export const escalations: Escalation[] = [
+  {
+    id: "ESC-1048",
+    severity: "High",
+    status: "Cross-functional review",
+    owner: "Enforcement On-Call",
+    teamsEngaged: ["Policy", "Legal", "Safeguards", "Product", "Comms"],
+    nextDecision: "Product mitigation recommendation",
+    nextUpdateDueMinutes: 22,
+    referralStatus: "Criteria check pending",
+    risk: "External visibility possible",
+    summary: "High-severity enforcement signal with coordinated behavior across several accounts.",
+    knownFacts: [
+      "Internal signal quality threshold exceeded.",
+      "Policy review completed and category assignment confirmed.",
+      "Legal review is active for referral pathway criteria.",
+    ],
+    unknowns: [
+      "Final referral determination pending legal check.",
+      "Total long-tail account impact is still being validated.",
+    ],
+    recommendation:
+      "Apply temporary mitigation while Legal review completes to reduce immediate operational risk.",
+    tradeoffs: [
+      "Temporary mitigation may increase user friction if signal is later downgraded.",
+      "Waiting for full legal review leaves longer exposure window.",
+    ],
+    operationalPosture: "Containment-first with legal gating on external pathway decisions.",
+    timeline: [
+      {
+        time: "18:02",
+        action: "Escalation opened and classified High.",
+        owner: "Maya Chen",
+        rationale: "Signal confidence exceeded high-severity threshold.",
+        followUp: "Engage Policy and Legal within 10 minutes.",
+      },
+      {
+        time: "18:10",
+        action: "Policy validation completed.",
+        owner: "D. Park",
+        rationale: "Category and enforcement posture confirmed.",
+        followUp: "Share mitigation options with Product.",
+      },
+      {
+        time: "18:19",
+        action: "Legal review initiated.",
+        owner: "A. Rivera",
+        rationale: "Referral pathway criteria may apply.",
+        followUp: "Decision update in 30 minutes.",
+      },
+    ],
+    stakeholders: [
+      {
+        team: "Policy",
+        status: "Complete",
+        owner: "D. Park",
+        lastUpdate: "6 min ago",
+        nextAction: "Monitor for category drift.",
+      },
+      {
+        team: "Legal",
+        status: "In progress",
+        owner: "A. Rivera",
+        lastUpdate: "2 min ago",
+        nextAction: "Finalize referral criteria review.",
+      },
+      {
+        team: "Product",
+        status: "Ready",
+        owner: "L. Tran",
+        lastUpdate: "5 min ago",
+        nextAction: "Stage temporary mitigation rollout.",
+      },
+      {
+        team: "Comms",
+        status: "Standby",
+        owner: "N. Shah",
+        lastUpdate: "8 min ago",
+        nextAction: "Prepare external visibility response draft.",
+      },
+    ],
+    leadershipUpdate: {
+      currentSituation:
+        "We are managing a high-severity enforcement escalation with validated internal signals and active legal review.",
+      knownFacts:
+        "Policy validation is complete. Product mitigation options are staged. Legal criteria check is in progress.",
+      unknowns:
+        "Final referral outcome and full affected-account scope remain pending.",
+      recommendedAction:
+        "Proceed with temporary mitigation while legal review is completed.",
+      tradeoff:
+        "This reduces near-term platform risk but may create moderate user friction if signal strength declines.",
+      nextUpdate: "30 minutes",
+    },
+    runbookId: "rb-high-sev",
+  },
+  {
+    id: "ESC-1052",
+    severity: "Medium",
+    status: "Investigation active",
+    owner: "Jordan Lee",
+    teamsEngaged: ["Safeguards", "Engineering", "Policy"],
+    nextDecision: "Severity reclassification",
+    nextUpdateDueMinutes: 35,
+    referralStatus: "Referral review required",
+    risk: "Moderate operational drift",
+    summary: "Repeated coordinated signal with inconsistent metadata from tooling feed.",
+    knownFacts: ["Repeated actor pattern detected.", "Tooling issue introducing metadata gaps."],
+    unknowns: ["Whether escalation should be upgraded to high severity."],
+    recommendation: "Stabilize metadata input before final severity change.",
+    tradeoffs: ["Delays final categorization, but reduces false escalation risk."],
+    operationalPosture: "Investigation and signal-quality validation.",
+    timeline: [
+      {
+        time: "17:40",
+        action: "Pattern detected in triage queue.",
+        owner: "Jordan Lee",
+        rationale: "Repeated actor overlap above baseline.",
+        followUp: "Engineering metadata check.",
+      },
+    ],
+    stakeholders: [
+      {
+        team: "Engineering",
+        status: "In progress",
+        owner: "S. Kim",
+        lastUpdate: "4 min ago",
+        nextAction: "Backfill missing severity fields.",
+      },
+    ],
+    leadershipUpdate: {
+      currentSituation:
+        "A medium-severity escalation is active with recurring signals and temporary metadata quality issues.",
+      knownFacts: "Signal recurrence is confirmed. Engineering is correcting missing metadata fields.",
+      unknowns: "Final severity and external referral necessity remain pending.",
+      recommendedAction: "Maintain current posture and reassess after metadata remediation.",
+      tradeoff: "Preserves decision accuracy at the cost of slower closeout.",
+      nextUpdate: "45 minutes",
+    },
+    runbookId: "rb-sensitive-handoff",
+  },
+  {
+    id: "ESC-1059",
+    severity: "Low",
+    status: "Monitoring",
+    owner: "Maya Chen",
+    teamsEngaged: ["Safeguards"],
+    nextDecision: "Close or continue monitoring",
+    nextUpdateDueMinutes: 55,
+    referralStatus: "No external referral pathway",
+    risk: "Low residual risk",
+    summary: "Contained low-severity incident retained for short monitoring window.",
+    knownFacts: ["Initial mitigation applied.", "No further spread observed."],
+    unknowns: ["Need one more observation interval before closure."],
+    recommendation: "Continue monitoring until next checkpoint.",
+    tradeoffs: ["Consumes limited operator attention for low-risk case."],
+    operationalPosture: "Observe and close when stable.",
+    timeline: [
+      {
+        time: "16:58",
+        action: "Mitigation applied.",
+        owner: "Maya Chen",
+        rationale: "Containment successful on first attempt.",
+        followUp: "Recheck impact after 60 minutes.",
+      },
+    ],
+    stakeholders: [
+      {
+        team: "Safeguards",
+        status: "Monitoring",
+        owner: "Maya Chen",
+        lastUpdate: "9 min ago",
+        nextAction: "Validate no recurrence.",
+      },
+    ],
+    leadershipUpdate: {
+      currentSituation:
+        "Low-severity escalation is contained and under short monitoring to confirm stable state.",
+      knownFacts: "Mitigation completed and no additional spread detected.",
+      unknowns: "Final closure confirmation at next check.",
+      recommendedAction: "Close if no changes at next checkpoint.",
+      tradeoff: "Minimal risk, minor operational overhead.",
+      nextUpdate: "60 minutes",
+    },
+    runbookId: "rb-investigation-handoff",
+  },
+];
+
+export const runbooks: Runbook[] = [
+  {
+    id: "rb-high-sev",
+    title: "High-Severity Enforcement Escalation",
+    purpose: "Provide a consistent response flow for high-severity escalations.",
+    triggerCriteria: ["Severity High", "Cross-functional decision dependency"],
+    requiredStakeholders: ["Safeguards", "Policy", "Legal", "Product"],
+    requiredSteps: [
+      { id: "a1", text: "Confirm enforcement signal" },
+      { id: "a2", text: "Validate policy category" },
+      { id: "a3", text: "Engage Legal if referral criteria may apply" },
+      { id: "a4", text: "Preserve required case notes" },
+      { id: "a5", text: "Confirm decision owner" },
+      { id: "a6", text: "Log referral review outcome" },
+      { id: "a7", text: "Prepare leadership update" },
+      { id: "a8", text: "Close loop with impacted teams" },
+    ],
+    escalationPath: ["Duty Manager", "Legal Lead", "Executive Escalation"],
+    requiredDocumentation: ["Decision rationale", "Stakeholder updates", "Risk posture notes"],
+    closeoutCriteria: ["Mitigation stable", "All approvals logged", "Leadership update sent"],
+  },
+  {
+    id: "rb-weekend-gap",
+    title: "Weekend Coverage Gap",
+    purpose: "Handle known or emerging coverage gaps with minimal response degradation.",
+    triggerCriteria: ["Missing backup", "High-load window forecast"],
+    requiredStakeholders: ["Safeguards", "People Ops", "Policy"],
+    requiredSteps: [
+      { id: "b1", text: "Validate gap window and impact" },
+      { id: "b2", text: "Assign temporary backup coverage" },
+      { id: "b3", text: "Adjust escalation path for reduced staffing" },
+      { id: "b4", text: "Publish shift note to on-call channel" },
+    ],
+    escalationPath: ["On-Call Manager", "Program Lead"],
+    requiredDocumentation: ["Coverage note", "Gap mitigation note"],
+    closeoutCriteria: ["Backup assigned", "Coverage confidence >= 80%"],
+  },
+  {
+    id: "rb-referral-path",
+    title: "External Referral Review Pathway",
+    purpose: "Track referral review criteria and ownership without automating final decisions.",
+    triggerCriteria: ["Referral review required", "Legal criteria check pending"],
+    requiredStakeholders: ["Legal", "Policy", "Safeguards"],
+    requiredSteps: [
+      { id: "c1", text: "Open referral review checklist" },
+      { id: "c2", text: "Validate required criteria fields" },
+      { id: "c3", text: "Capture legal reviewer decision" },
+      { id: "c4", text: "Log referral outcome" },
+    ],
+    escalationPath: ["Legal Lead"],
+    requiredDocumentation: ["Criteria checklist", "Outcome log"],
+    closeoutCriteria: ["Legal decision recorded", "Outcome communicated"],
+  },
+  {
+    id: "rb-tooling-outage",
+    title: "Tooling Outage Affecting Triage",
+    purpose: "Protect first-response performance during tooling degradation.",
+    triggerCriteria: ["Queue latency", "Metadata gaps", "Routing failures"],
+    requiredStakeholders: ["Engineering", "Safeguards"],
+    requiredSteps: [
+      { id: "d1", text: "Declare tooling issue severity" },
+      { id: "d2", text: "Enable documented workaround" },
+      { id: "d3", text: "Route issue to engineering owner" },
+      { id: "d4", text: "Track SLA impact every 30 minutes" },
+    ],
+    escalationPath: ["Engineering Manager", "Program Lead"],
+    requiredDocumentation: ["Issue timeline", "Workaround usage log"],
+    closeoutCriteria: ["Tool restored", "Workaround retired", "Impact review completed"],
+  },
+  {
+    id: "rb-exec-update",
+    title: "Executive Update Protocol",
+    purpose: "Keep leadership informed with concise and decision-focused updates.",
+    triggerCriteria: ["High severity active", "External visibility risk"],
+    requiredStakeholders: ["Safeguards", "Comms", "Leadership"],
+    requiredSteps: [
+      { id: "e1", text: "Summarize situation in plain language" },
+      { id: "e2", text: "List knowns and unknowns" },
+      { id: "e3", text: "State recommendation and trade-off" },
+      { id: "e4", text: "Set next update interval" },
+    ],
+    escalationPath: ["Duty Executive"],
+    requiredDocumentation: ["Executive summary log"],
+    closeoutCriteria: ["Update sent", "Acknowledgment received"],
+  },
+  {
+    id: "rb-mitigation",
+    title: "Product Mitigation Coordination",
+    purpose: "Coordinate mitigation recommendations and rollout timing.",
+    triggerCriteria: ["Product action required"],
+    requiredStakeholders: ["Product", "Engineering", "Safeguards"],
+    requiredSteps: [
+      { id: "f1", text: "Confirm mitigation options with product owner" },
+      { id: "f2", text: "Assess user impact" },
+      { id: "f3", text: "Select and stage mitigation" },
+      { id: "f4", text: "Record rollback criteria" },
+    ],
+    escalationPath: ["Product Director"],
+    requiredDocumentation: ["Mitigation decision note", "Rollback plan"],
+    closeoutCriteria: ["Mitigation deployed", "Impact monitored"],
+  },
+  {
+    id: "rb-sensitive-handoff",
+    title: "Sensitive Investigation Handoff",
+    purpose: "Ensure continuity and context during shift transitions.",
+    triggerCriteria: ["Open sensitive case", "On-call shift handoff"],
+    requiredStakeholders: ["Current On-Call", "Incoming On-Call", "Policy"],
+    requiredSteps: [
+      { id: "g1", text: "Capture current posture and blockers" },
+      { id: "g2", text: "Confirm next decision owner" },
+      { id: "g3", text: "Transfer timeline and case artifacts" },
+      { id: "g4", text: "Acknowledge handoff completion" },
+    ],
+    escalationPath: ["On-Call Manager"],
+    requiredDocumentation: ["Handoff note", "Outstanding decision list"],
+    closeoutCriteria: ["Incoming owner acknowledged", "No orphaned actions"],
+  },
+];
+
+export const coverageSchedule: CoverageShift[] = [
+  {
+    day: "Friday",
+    window: "6:00 PM - 12:00 AM",
+    primary: "Maya Chen",
+    backup: "Jordan Lee",
+    policyContact: "D. Park",
+    legalContact: "A. Rivera",
+    engineeringPartner: "S. Kim",
+  },
+  {
+    day: "Saturday",
+    window: "12:00 AM - 6:00 AM",
+    primary: "Maya Chen",
+    backup: "Jordan Lee",
+    policyContact: "D. Park",
+    legalContact: "A. Rivera",
+    engineeringPartner: "S. Kim",
+  },
+  {
+    day: "Sunday",
+    window: "8:00 PM - 12:00 AM",
+    primary: "Maya Chen",
+    backup: "Unassigned",
+    policyContact: "Unavailable",
+    legalContact: "A. Rivera",
+    engineeringPartner: "Unassigned",
+    riskFlag: "Coverage gap detected",
+  },
+];
+
+export const coverageGaps = [
+  "No backup assigned Sunday 8 PM to midnight",
+  "Primary has handled 3 high-severity escalations this week",
+  "Policy reviewer unavailable during expected peak period",
+  "Engineering backup not assigned for tooling issue queue",
+];
+
+export const staffingRecommendation =
+  "Inbound volume is up 31% over the last four weeks. Weekend escalations are up 18%. Current coverage remains functional, but backup depth is thin during high-risk weekend windows. Recommend adding a second backup rotation for Friday through Sunday coverage.";
+
+export const toolingIssues: ToolingIssue[] = [
+  {
+    id: "TL-203",
+    name: "Triage Queue Latency",
+    severity: "High",
+    operationalImpact: "Delays case assignment and first response",
+    engineeringOwner: "Enforcement Platform Eng",
+    workaround: "Manual queue refresh every 10 minutes",
+    status: "In progress",
+    eta: "2 days",
+    escalationPath: "Escalate to Enforcement Platform Manager",
+  },
+  {
+    id: "TL-209",
+    name: "Duplicate Alert Noise",
+    severity: "Medium",
+    operationalImpact: "Increases on-call fatigue and slows prioritization",
+    engineeringOwner: "Alerting Infrastructure",
+    workaround: "Manual dedupe in case notes",
+    status: "Scoped",
+    eta: "1 week",
+    escalationPath: "Escalate to Alerting Infra Lead",
+  },
+  {
+    id: "TL-214",
+    name: "Missing Severity Metadata",
+    severity: "Medium",
+    operationalImpact: "Makes escalation routing inconsistent",
+    engineeringOwner: "Case Management Eng",
+    workaround: "On-call owner manually assigns severity",
+    status: "Awaiting prioritization",
+    eta: "TBD",
+    escalationPath: "Escalate through Program Triage Board",
+  },
+  {
+    id: "TL-198",
+    name: "Stale Stakeholder Presence Feed",
+    severity: "Low",
+    operationalImpact: "Can delay identifying active responders",
+    engineeringOwner: "Internal Systems",
+    workaround: "Manual verification in rotation channel",
+    status: "In progress",
+    eta: "3 days",
+    escalationPath: "Escalate to Internal Systems PM",
+  },
+];
+
+export const metricsTrend: MetricsSnapshot[] = [
+  {
+    week: "W1",
+    inboundEscalations: 34,
+    firstResponseMinutes: 10,
+    timeToDecisionMinutes: 37,
+    weekendVolume: 11,
+    slaMisses: 2,
+    toolingDelayMinutes: 42,
+    handoffMinutes: 14,
+    runbookCompliance: 86,
+    automationSavingsHours: 4.2,
+  },
+  {
+    week: "W2",
+    inboundEscalations: 39,
+    firstResponseMinutes: 11,
+    timeToDecisionMinutes: 41,
+    weekendVolume: 13,
+    slaMisses: 2,
+    toolingDelayMinutes: 48,
+    handoffMinutes: 15,
+    runbookCompliance: 88,
+    automationSavingsHours: 5.1,
+  },
+  {
+    week: "W3",
+    inboundEscalations: 44,
+    firstResponseMinutes: 11,
+    timeToDecisionMinutes: 46,
+    weekendVolume: 15,
+    slaMisses: 3,
+    toolingDelayMinutes: 55,
+    handoffMinutes: 17,
+    runbookCompliance: 87,
+    automationSavingsHours: 6.4,
+  },
+  {
+    week: "W4",
+    inboundEscalations: 55,
+    firstResponseMinutes: 12,
+    timeToDecisionMinutes: 51,
+    weekendVolume: 18,
+    slaMisses: 4,
+    toolingDelayMinutes: 63,
+    handoffMinutes: 19,
+    runbookCompliance: 85,
+    automationSavingsHours: 7.6,
+  },
+];
+
+export const referralReviewVolume = {
+  thisWeek: 13,
+  completed: 9,
+  pendingLegal: 3,
+  pendingDocumentation: 1,
+};
+
+export const automationBacklog: AutomationBacklogItem[] = [
+  {
+    manualTask: "Copying case summaries into leadership updates",
+    frequency: "40x/week",
+    estimatedTimeCost: "High",
+    operationalRisk: "Inconsistent updates",
+    automationIdea: "Auto-generate decision brief from structured case fields",
+    impactScore: 9,
+    status: "Ready for engineering review",
+  },
+  {
+    manualTask: "Checking referral criteria fields",
+    frequency: "15x/week",
+    estimatedTimeCost: "Medium",
+    operationalRisk: "Missed required documentation",
+    automationIdea: "Required criteria checklist before closeout",
+    impactScore: 10,
+    status: "In design",
+  },
+  {
+    manualTask: "Weekend coverage validation",
+    frequency: "Weekly",
+    estimatedTimeCost: "Medium",
+    operationalRisk: "Coverage gap",
+    automationIdea: "Auto-alert if primary or backup is missing",
+    impactScore: 8,
+    status: "Prototype",
+  },
+  {
+    manualTask: "Duplicate alerts",
+    frequency: "Daily",
+    estimatedTimeCost: "High",
+    operationalRisk: "Alert fatigue",
+    automationIdea: "Dedupe alerts by case ID and signal type",
+    impactScore: 7,
+    status: "Scoped",
+  },
+];
+
+export const leadershipSummary =
+  "Operational health is currently in caution status. First response remains within target, but decision time has increased due to cross-functional review dependencies. Weekend coverage is adequate, but backup depth is thin. Tooling latency is creating avoidable triage friction.";
+
+export const whatLeadershipNeedsToKnow =
+  "Operational Health: Caution. Escalation volume increased 24% week over week. First response remains within target, but time-to-decision increased due to Legal and Product review dependencies. Weekend coverage is currently adequate, but backup depth is thin. Tooling latency is contributing to avoidable triage delays.";
