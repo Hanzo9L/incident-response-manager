@@ -66,6 +66,15 @@ The UI loads:
 - `outputs/dashboard_metrics.json` when available
 - fallback `ui/sample-dashboard-metrics.json` otherwise
 
+## High-scrutiny review packet
+
+The repository includes governance artifacts designed for security, policy, legal, and regulator review:
+
+- `docs/SECURITY_MODEL.md`
+- `docs/GOVERNANCE_CONTROLS.md`
+- `docs/MODEL_RISK_REGISTER.md`
+- `docs/REGULATOR_READY_DECISION_TEMPLATE.md`
+
 ## Automation features included
 
 ### 1) Routing and triage
