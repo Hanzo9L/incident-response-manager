@@ -69,18 +69,23 @@ Then navigate to `http://localhost:8000/ui/`.
 
 ## Vercel deploy
 
-This repo includes a `vercel.json` that routes traffic to `ui/index.html`.
+Use these project settings in Vercel:
+
+- Framework Preset: `Other`
+- Root Directory: `ui`
+- Build Command: `echo "no build"` (or leave blank)
+- Output Directory: `.` (or leave blank if your Vercel UI requires)
+- Install Command: leave blank
 
 Deploy steps:
 
 1. Push this repo to GitHub
 2. Import project in Vercel
-3. Keep default settings and deploy
+3. Apply the settings above and deploy
 
 The UI loads:
 
-- `outputs/dashboard_metrics.json` when available
-- fallback `ui/sample-dashboard-metrics.json` otherwise
+- `sample-dashboard-metrics.json` by default in Vercel deployment
 
 ## High-scrutiny review packet
 
