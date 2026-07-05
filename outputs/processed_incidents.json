@@ -1,24 +1,70 @@
 [
   {
     "incident_id": "INC-001",
-    "priority": "P0",
-    "score": 141,
-    "queue": "abuse_operations",
-    "assignee": "chris",
-    "escalate_to": [
-      "Safeguards",
-      "Policy",
-      "Product",
-      "Legal"
-    ],
-    "compliance_flags": [
-      {
-        "framework": "EU_DSA",
-        "confidence": "medium",
-        "reason": "Possible systemic risk or illegal content pattern",
-        "recommendation": "Route for policy review and regulatory logging check"
-      }
-    ],
+    "created_at": "2026-07-05T13:15:00Z",
+    "source": "abuse_form",
+    "category": "coordinated_abuse",
+    "region": "US",
+    "users_impacted": 420,
+    "tooling_degraded": false,
+    "triage": {
+      "priority": "P0",
+      "score": 141,
+      "confidence": 0.93,
+      "abstained": false,
+      "reasons": [
+        "severity_hint=sev1",
+        "users_impacted=420",
+        "risk_keywords_detected"
+      ]
+    },
+    "assignment": {
+      "queue": "abuse_operations",
+      "assignee": "chris",
+      "backup_assignee": "devin",
+      "assignee_load_score": 1
+    },
+    "escalation": {
+      "suggested_partners": [
+        "Safeguards",
+        "Policy",
+        "Product",
+        "Legal"
+      ],
+      "required_approvals": [
+        "SafeguardsLead",
+        "PolicyLead",
+        "Legal"
+      ],
+      "approved_by": [
+        "SafeguardsLead"
+      ],
+      "missing_approvals": [
+        "PolicyLead",
+        "Legal"
+      ]
+    },
+    "compliance": {
+      "framework_matches": [
+        {
+          "framework": "EU_DSA",
+          "confidence": "medium",
+          "reason": "Possible systemic risk or illegal content pattern",
+          "recommendation": "Route for policy review and regulatory logging check"
+        }
+      ],
+      "referral_ready": true,
+      "human_approval_required": true
+    },
+    "sla": {
+      "ack_sla_minutes": 5,
+      "contain_sla_minutes": 30,
+      "at_risk": true,
+      "risk_reasons": [
+        "high_user_impact"
+      ]
+    },
+    "status": "open",
     "enrichment": {
       "summary": "coordinated_abuse incident in US region",
       "triage_reasons": [
@@ -37,15 +83,50 @@
   },
   {
     "incident_id": "INC-002",
-    "priority": "P2",
-    "score": 73,
-    "queue": "abuse_operations",
-    "assignee": "devin",
-    "escalate_to": [
-      "Safeguards",
-      "Comms"
-    ],
-    "compliance_flags": [],
+    "created_at": "2026-07-05T13:22:00Z",
+    "source": "trust_ops_queue",
+    "category": "impersonation",
+    "region": "EU",
+    "users_impacted": 75,
+    "tooling_degraded": false,
+    "triage": {
+      "priority": "P2",
+      "score": 73,
+      "confidence": 0.56,
+      "abstained": false,
+      "reasons": [
+        "severity_hint=sev2",
+        "users_impacted=75",
+        "risk_keywords_detected"
+      ]
+    },
+    "assignment": {
+      "queue": "abuse_operations",
+      "assignee": "devin",
+      "backup_assignee": "chris",
+      "assignee_load_score": 1
+    },
+    "escalation": {
+      "suggested_partners": [
+        "Safeguards",
+        "Comms"
+      ],
+      "required_approvals": [],
+      "approved_by": [],
+      "missing_approvals": []
+    },
+    "compliance": {
+      "framework_matches": [],
+      "referral_ready": false,
+      "human_approval_required": false
+    },
+    "sla": {
+      "ack_sla_minutes": 30,
+      "contain_sla_minutes": 180,
+      "at_risk": false,
+      "risk_reasons": []
+    },
+    "status": "open",
     "enrichment": {
       "summary": "impersonation incident in EU region",
       "triage_reasons": [
@@ -64,14 +145,51 @@
   },
   {
     "incident_id": "INC-003",
-    "priority": "P2",
-    "score": 80,
-    "queue": "platform_reliability",
-    "assignee": "erin",
-    "escalate_to": [
-      "Safeguards"
-    ],
-    "compliance_flags": [],
+    "created_at": "2026-07-05T13:31:00Z",
+    "source": "internal_alert",
+    "category": "tooling",
+    "region": "Global",
+    "users_impacted": 0,
+    "tooling_degraded": true,
+    "triage": {
+      "priority": "P2",
+      "score": 80,
+      "confidence": 0.59,
+      "abstained": false,
+      "reasons": [
+        "severity_hint=sev2",
+        "on_call_tooling_degraded=true",
+        "risk_keywords_detected"
+      ]
+    },
+    "assignment": {
+      "queue": "platform_reliability",
+      "assignee": "erin",
+      "backup_assignee": "frank",
+      "assignee_load_score": 1
+    },
+    "escalation": {
+      "suggested_partners": [
+        "Safeguards"
+      ],
+      "required_approvals": [],
+      "approved_by": [],
+      "missing_approvals": []
+    },
+    "compliance": {
+      "framework_matches": [],
+      "referral_ready": false,
+      "human_approval_required": false
+    },
+    "sla": {
+      "ack_sla_minutes": 30,
+      "contain_sla_minutes": 180,
+      "at_risk": true,
+      "risk_reasons": [
+        "tooling_degraded"
+      ]
+    },
+    "status": "open",
     "enrichment": {
       "summary": "tooling incident in Global region",
       "triage_reasons": [
@@ -90,25 +208,69 @@
   },
   {
     "incident_id": "INC-004",
-    "priority": "P0",
-    "score": 210,
-    "queue": "high_risk_enforcement",
-    "assignee": "alice",
-    "escalate_to": [
-      "Safeguards",
-      "Policy",
-      "Product",
-      "Legal",
-      "LawEnforcementLiaison"
-    ],
-    "compliance_flags": [
-      {
-        "framework": "NCMEC",
-        "confidence": "high",
-        "reason": "Potential child safety exploitation signal detected",
-        "recommendation": "Escalate to legal and child safety specialist immediately"
-      }
-    ],
+    "created_at": "2026-07-05T13:42:00Z",
+    "source": "user_report",
+    "category": "safety_content",
+    "region": "US",
+    "users_impacted": 18,
+    "tooling_degraded": false,
+    "triage": {
+      "priority": "P0",
+      "score": 210,
+      "confidence": 0.99,
+      "abstained": false,
+      "reasons": [
+        "severity_hint=sev0",
+        "users_impacted=18",
+        "risk_keywords_detected"
+      ]
+    },
+    "assignment": {
+      "queue": "high_risk_enforcement",
+      "assignee": "alice",
+      "backup_assignee": "ben",
+      "assignee_load_score": 1
+    },
+    "escalation": {
+      "suggested_partners": [
+        "Safeguards",
+        "Policy",
+        "Product",
+        "Legal",
+        "LawEnforcementLiaison"
+      ],
+      "required_approvals": [
+        "SafeguardsLead",
+        "PolicyLead",
+        "Legal"
+      ],
+      "approved_by": [
+        "SafeguardsLead"
+      ],
+      "missing_approvals": [
+        "PolicyLead",
+        "Legal"
+      ]
+    },
+    "compliance": {
+      "framework_matches": [
+        {
+          "framework": "NCMEC",
+          "confidence": "high",
+          "reason": "Potential child safety exploitation signal detected",
+          "recommendation": "Escalate to legal and child safety specialist immediately"
+        }
+      ],
+      "referral_ready": true,
+      "human_approval_required": true
+    },
+    "sla": {
+      "ack_sla_minutes": 5,
+      "contain_sla_minutes": 30,
+      "at_risk": false,
+      "risk_reasons": []
+    },
+    "status": "open",
     "enrichment": {
       "summary": "safety_content incident in US region",
       "triage_reasons": [
@@ -127,16 +289,61 @@
   },
   {
     "incident_id": "INC-005",
-    "priority": "P1",
-    "score": 128,
-    "queue": "abuse_operations",
-    "assignee": "chris",
-    "escalate_to": [
-      "Safeguards",
-      "Policy",
-      "Product"
-    ],
-    "compliance_flags": [],
+    "created_at": "2026-07-05T13:53:00Z",
+    "source": "api_guardrail_alert",
+    "category": "fraud",
+    "region": "APAC",
+    "users_impacted": 210,
+    "tooling_degraded": false,
+    "triage": {
+      "priority": "P1",
+      "score": 128,
+      "confidence": 0.86,
+      "abstained": false,
+      "reasons": [
+        "severity_hint=sev1",
+        "users_impacted=210",
+        "risk_keywords_detected"
+      ]
+    },
+    "assignment": {
+      "queue": "abuse_operations",
+      "assignee": "chris",
+      "backup_assignee": "devin",
+      "assignee_load_score": 2
+    },
+    "escalation": {
+      "suggested_partners": [
+        "Safeguards",
+        "Policy",
+        "Product"
+      ],
+      "required_approvals": [
+        "SafeguardsLead",
+        "PolicyLead"
+      ],
+      "approved_by": [
+        "SafeguardsLead"
+      ],
+      "missing_approvals": [
+        "PolicyLead"
+      ]
+    },
+    "compliance": {
+      "framework_matches": [],
+      "referral_ready": false,
+      "human_approval_required": false
+    },
+    "sla": {
+      "ack_sla_minutes": 10,
+      "contain_sla_minutes": 60,
+      "at_risk": true,
+      "risk_reasons": [
+        "assignee_load_high",
+        "high_user_impact"
+      ]
+    },
+    "status": "open",
     "enrichment": {
       "summary": "fraud incident in APAC region",
       "triage_reasons": [

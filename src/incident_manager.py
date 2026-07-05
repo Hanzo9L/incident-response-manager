@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -11,12 +11,18 @@ from typing import Any
 @dataclass
 class IncidentResult:
     incident_id: str
-    priority: str
-    score: int
-    queue: str
-    assignee: str
-    escalate_to: list[str]
-    compliance_flags: list[dict[str, Any]]
+    created_at: str
+    source: str
+    category: str
+    region: str
+    users_impacted: int
+    tooling_degraded: bool
+    triage: dict[str, Any]
+    assignment: dict[str, Any]
+    escalation: dict[str, Any]
+    compliance: dict[str, Any]
+    sla: dict[str, Any]
+    status: str
     enrichment: dict[str, Any]
 
 
@@ -67,7 +73,14 @@ def _score_text(narrative: str) -> int:
     return score
 
 
-def score_incident(incident: dict[str, Any]) -> tuple[int, str, list[str]]:
+def _triage_confidence(score: int, reasons: list[str]) -> float:
+    # Confidence increases with stronger signal and more explicit evidence.
+    base = min(score / 180, 1.0)
+    reason_bonus = min(len(reasons) * 0.05, 0.2)
+    return round(min(base + reason_bonus, 0.99), 2)
+
+
+def score_incident(incident: dict[str, Any]) -> tuple[int, str, list[str], float, bool]:
     narrative = incident.get("narrative", "")
     severity_hint = str(incident.get("severity_hint", "")).lower()
     users_impacted = int(incident.get("users_impacted", 0))
@@ -89,13 +102,17 @@ def score_incident(incident: dict[str, Any]) -> tuple[int, str, list[str]]:
     if _score_text(narrative) > 0:
         reasons.append("risk_keywords_detected")
 
+    confidence = _triage_confidence(score, reasons)
     if score >= 130:
-        return score, "P0", reasons
-    if score >= 90:
-        return score, "P1", reasons
-    if score >= 55:
-        return score, "P2", reasons
-    return score, "P3", reasons
+        priority = "P0"
+    elif score >= 90:
+        priority = "P1"
+    elif score >= 55:
+        priority = "P2"
+    else:
+        priority = "P3"
+    abstained = confidence < 0.5
+    return score, priority, reasons, confidence, abstained
 
 
 def route_incident(incident: dict[str, Any], priority: str) -> str:
@@ -113,12 +130,14 @@ def route_incident(incident: dict[str, Any], priority: str) -> str:
     return "general_enforcement"
 
 
-def auto_assign(queue: str, current_index: dict[str, int]) -> str:
+def auto_assign(queue: str, current_index: dict[str, int], assignee_load: dict[str, int]) -> tuple[str, str, int]:
     owners = QUEUE_OWNERS[queue]
     idx = current_index.get(queue, 0)
     assignee = owners[idx % len(owners)]
+    backup_assignee = owners[(idx + 1) % len(owners)]
     current_index[queue] = idx + 1
-    return assignee
+    assignee_load[assignee] += 1
+    return assignee, backup_assignee, assignee_load[assignee]
 
 
 def compliance_assist(incident: dict[str, Any]) -> list[dict[str, Any]]:
@@ -198,12 +217,52 @@ def enrich_ticket(incident: dict[str, Any], reasons: list[str], similar: list[st
     }
 
 
+def sla_policy(priority: str) -> tuple[int, int]:
+    if priority == "P0":
+        return 5, 30
+    if priority == "P1":
+        return 10, 60
+    if priority == "P2":
+        return 30, 180
+    return 60, 480
+
+
+def sla_risk_state(incident: dict[str, Any], priority: str, assignee_load_score: int, abstained: bool) -> dict[str, Any]:
+    ack_sla_minutes, contain_sla_minutes = sla_policy(priority)
+    reasons: list[str] = []
+    if assignee_load_score >= 2:
+        reasons.append("assignee_load_high")
+    if incident.get("tooling_degraded", False):
+        reasons.append("tooling_degraded")
+    if int(incident.get("users_impacted", 0)) >= 200:
+        reasons.append("high_user_impact")
+    if abstained:
+        reasons.append("triage_abstained")
+
+    at_risk = len(reasons) > 0 and priority in {"P0", "P1", "P2"}
+    return {
+        "ack_sla_minutes": ack_sla_minutes,
+        "contain_sla_minutes": contain_sla_minutes,
+        "at_risk": at_risk,
+        "risk_reasons": reasons,
+    }
+
+
+def required_approvals(priority: str, compliance_flags: list[dict[str, Any]]) -> list[str]:
+    approvers: list[str] = []
+    if priority in {"P0", "P1"}:
+        approvers.extend(["SafeguardsLead", "PolicyLead"])
+    if compliance_flags:
+        approvers.append("Legal")
+    return approvers
+
+
 def generate_runbook_updates(processed: list[IncidentResult]) -> str:
-    by_queue = Counter(item.queue for item in processed)
+    by_queue = Counter(item.assignment["queue"] for item in processed)
     framework_counts = Counter(
-        flag["framework"] for item in processed for flag in item.compliance_flags
+        flag["framework"] for item in processed for flag in item.compliance["framework_matches"]
     )
-    priority_counts = Counter(item.priority for item in processed)
+    priority_counts = Counter(item.triage["priority"] for item in processed)
 
     lines = [
         "# Runbook Update Suggestions",
@@ -231,15 +290,22 @@ def generate_runbook_updates(processed: list[IncidentResult]) -> str:
 
 
 def dashboard_metrics(processed: list[IncidentResult], started_at: datetime) -> dict[str, Any]:
-    queue_counts = Counter(item.queue for item in processed)
-    priority_counts = Counter(item.priority for item in processed)
-    escalation_counts = Counter(partner for item in processed for partner in item.escalate_to)
+    queue_counts = Counter(item.assignment["queue"] for item in processed)
+    priority_counts = Counter(item.triage["priority"] for item in processed)
+    escalation_counts = Counter(
+        partner for item in processed for partner in item.escalation["suggested_partners"]
+    )
     compliance_counts = Counter(
-        flag["framework"] for item in processed for flag in item.compliance_flags
+        flag["framework"] for item in processed for flag in item.compliance["framework_matches"]
+    )
+    at_risk_count = sum(1 for item in processed if item.sla["at_risk"])
+    abstained_count = sum(1 for item in processed if item.triage["abstained"])
+    missing_approval_count = sum(
+        1 for item in processed if len(item.escalation["missing_approvals"]) > 0
     )
 
     total = len(processed)
-    p0_p1 = sum(1 for item in processed if item.priority in {"P0", "P1"})
+    p0_p1 = sum(1 for item in processed if item.triage["priority"] in {"P0", "P1"})
     now = datetime.now(timezone.utc)
     runtime_seconds = (now - started_at).total_seconds()
 
@@ -252,6 +318,20 @@ def dashboard_metrics(processed: list[IncidentResult], started_at: datetime) -> 
         "priority_distribution": dict(priority_counts),
         "escalation_partner_mentions": dict(escalation_counts),
         "compliance_flag_counts": dict(compliance_counts),
+        "automation_outcomes": {
+            "auto_triaged_count": total - abstained_count,
+            "manual_triage_required_count": abstained_count,
+            "auto_assigned_count": total,
+            "compliance_flagged_count": sum(compliance_counts.values()),
+            "sla_at_risk_count": at_risk_count,
+            "missing_approval_count": missing_approval_count,
+        },
+        "now_queue": {
+            "high_priority_open": p0_p1,
+            "sla_at_risk": at_risk_count,
+            "manual_triage_required": abstained_count,
+            "approval_blocked": missing_approval_count,
+        },
         "runtime_seconds": runtime_seconds,
     }
 
@@ -259,27 +339,57 @@ def dashboard_metrics(processed: list[IncidentResult], started_at: datetime) -> 
 def process_incident_batch(incidents: list[dict[str, Any]]) -> tuple[list[IncidentResult], dict[str, Any], str]:
     started_at = datetime.now(timezone.utc)
     rotation_state: dict[str, int] = defaultdict(int)
+    assignee_load: dict[str, int] = defaultdict(int)
     processed: list[IncidentResult] = []
     history: list[dict[str, Any]] = []
 
     for incident in incidents:
-        score, priority, reasons = score_incident(incident)
+        score, priority, reasons, confidence, abstained = score_incident(incident)
         queue = route_incident(incident, priority)
-        assignee = auto_assign(queue, rotation_state)
+        assignee, backup_assignee, load_score = auto_assign(queue, rotation_state, assignee_load)
         compliance_flags = compliance_assist(incident)
-        escalate_to = escalation_matrix(priority, compliance_flags, incident)
+        suggested_partners = escalation_matrix(priority, compliance_flags, incident)
+        required = required_approvals(priority, compliance_flags)
+        approved = ["SafeguardsLead"] if priority in {"P0", "P1"} else []
         similar = find_similar_incidents(history, incident)
         enrichment = enrich_ticket(incident, reasons, similar)
+        sla = sla_risk_state(incident, priority, load_score, abstained)
 
         processed.append(
             IncidentResult(
                 incident_id=str(incident["id"]),
-                priority=priority,
-                score=score,
-                queue=queue,
-                assignee=assignee,
-                escalate_to=escalate_to,
-                compliance_flags=compliance_flags,
+                created_at=str(incident.get("timestamp", "")),
+                source=str(incident.get("source", "unknown")),
+                category=str(incident.get("category", "unknown")),
+                region=str(incident.get("region", "unknown")),
+                users_impacted=int(incident.get("users_impacted", 0)),
+                tooling_degraded=bool(incident.get("tooling_degraded", False)),
+                triage={
+                    "priority": priority,
+                    "score": score,
+                    "confidence": confidence,
+                    "abstained": abstained,
+                    "reasons": reasons,
+                },
+                assignment={
+                    "queue": queue,
+                    "assignee": assignee,
+                    "backup_assignee": backup_assignee,
+                    "assignee_load_score": load_score,
+                },
+                escalation={
+                    "suggested_partners": suggested_partners,
+                    "required_approvals": required,
+                    "approved_by": approved,
+                    "missing_approvals": [item for item in required if item not in approved],
+                },
+                compliance={
+                    "framework_matches": compliance_flags,
+                    "referral_ready": len(compliance_flags) > 0,
+                    "human_approval_required": len(compliance_flags) > 0,
+                },
+                sla=sla,
+                status="open",
                 enrichment=enrichment,
             )
         )
@@ -293,19 +403,7 @@ def process_incident_batch(incidents: list[dict[str, Any]]) -> tuple[list[Incide
 def write_outputs(processed: list[IncidentResult], metrics: dict[str, Any], runbook_md: str, output_dir: Path) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    processed_payload = [
-        {
-            "incident_id": item.incident_id,
-            "priority": item.priority,
-            "score": item.score,
-            "queue": item.queue,
-            "assignee": item.assignee,
-            "escalate_to": item.escalate_to,
-            "compliance_flags": item.compliance_flags,
-            "enrichment": item.enrichment,
-        }
-        for item in processed
-    ]
+    processed_payload = [asdict(item) for item in processed]
 
     (output_dir / "processed_incidents.json").write_text(
         json.dumps(processed_payload, indent=2),

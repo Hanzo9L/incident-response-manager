@@ -17,6 +17,25 @@
 
       <section class="panel-grid">
         <article class="panel">
+          <h2>Automations Delivered</h2>
+          <ul id="automationDelivered"></ul>
+        </article>
+        <article class="panel">
+          <h2>Automation Backlog</h2>
+          <ul id="automationBacklog"></ul>
+        </article>
+        <article class="panel">
+          <h2>Now Action Queue</h2>
+          <ul id="nowActionQueue"></ul>
+        </article>
+        <article class="panel">
+          <h2>Automation Outcomes</h2>
+          <ul id="automationOutcomes"></ul>
+        </article>
+      </section>
+
+      <section class="panel-grid">
+        <article class="panel">
           <h2>Queue Distribution</h2>
           <ul id="queueDistribution"></ul>
         </article>
@@ -40,6 +59,24 @@
       <section class="panel">
         <h2>Operational Notes</h2>
         <p id="operationalNotes"></p>
+      </section>
+
+      <section class="panel">
+        <h2>Incident Automation Actions</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Incident</th>
+                <th>Priority</th>
+                <th>Queue</th>
+                <th>Assigned</th>
+                <th>Automations Applied</th>
+              </tr>
+            </thead>
+            <tbody id="incidentRows"></tbody>
+          </table>
+        </div>
       </section>
     </main>
 
