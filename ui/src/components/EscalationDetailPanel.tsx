@@ -1,5 +1,6 @@
 import { getRunbookById } from "../data/selectors";
 import type { Escalation } from "../types/models";
+import { AutomatedFlowPanel } from "./AutomatedFlowPanel";
 import { RunbookChecklist } from "./RunbookChecklist";
 import { StakeholderStatusList } from "./StakeholderStatusList";
 import { TimelineLog } from "./TimelineLog";
@@ -19,6 +20,8 @@ export function EscalationDetailPanel({ escalation, runbookState, onToggleRunboo
         <p className="text-sm text-slate-300">{escalation.summary}</p>
         <p className="mt-2 text-xs text-slate-400">Operational posture: {escalation.operationalPosture}</p>
       </section>
+
+      <AutomatedFlowPanel escalation={escalation} />
 
       <section className="rounded-xl border border-slate-800 bg-slate-900 p-4">
         <h3 className="mb-2 text-sm font-semibold text-slate-200">Decision Frame</h3>

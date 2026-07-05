@@ -107,3 +107,11 @@ export type AutomationBacklogItem = {
   impactScore: number;
   status: "Ready for engineering review" | "In design" | "Prototype" | "Scoped";
 };
+
+export type ProgramMaturityMetric = {
+  id: string;
+  label: string;
+  score: number;
+  status: "Strong" | "Caution" | "Needs investment";
+  represents: string;
+};
