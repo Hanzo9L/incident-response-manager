@@ -10,6 +10,22 @@ It demonstrates how to automate:
 - runbook update suggestions from incident patterns
 - near-real-time reporting outputs for leadership dashboards
 
+## Hiring Manager Start Here
+
+If you only have 2 minutes, review in this order:
+
+1. Live UI dashboard (Vercel project URL)
+2. `docs/APPLICATION_MESSAGE.md`
+3. `docs/INCIDENT_COMMANDER_PACKET.md`
+4. `docs/ONCALL_RUNBOOK_AND_SOPS.md`
+5. `docs/SECURITY_MODEL.md`
+
+What this demonstrates quickly:
+
+- I can run cross-functional escalations under pressure.
+- I can reduce repetitive toil through safe automation.
+- I build systems that are auditable, policy-aligned, and regulator-ready.
+
 ## Why this project exists
 
 The goal is to show operator judgment and process maturity, not just code.
