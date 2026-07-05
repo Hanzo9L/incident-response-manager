@@ -84,6 +84,25 @@ body {
   font-size: 1rem;
 }
 
+.lane-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.lane {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  background: #0f1522;
+}
+
+.lane h3 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -104,6 +123,25 @@ td {
 th {
   color: var(--muted);
   font-weight: 600;
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.btn-small {
+  background: #1b2742;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.btn-small:hover {
+  border-color: var(--accent);
 }
 
 ul {

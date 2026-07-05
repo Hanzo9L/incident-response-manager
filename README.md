@@ -59,6 +59,16 @@ python scripts/run_demo.py
 - `outputs/dashboard_metrics.json`
 - `outputs/runbook_updates.md`
 
+To run the infraction-focused simulation:
+
+```bash
+python scripts/run_infractions_simulation.py
+```
+
+This also generates:
+
+- `outputs/infractions_simulation_trace.md`
+
 3. Open the UI dashboard locally:
 
 ```bash

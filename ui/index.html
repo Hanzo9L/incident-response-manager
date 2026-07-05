@@ -34,6 +34,28 @@
         </article>
       </section>
 
+      <section class="panel">
+        <h2>Action Queue Lanes</h2>
+        <div class="lane-grid">
+          <article class="lane">
+            <h3>Needs Ack (P0/P1)</h3>
+            <ul id="laneNeedsAck"></ul>
+          </article>
+          <article class="lane">
+            <h3>SLA At Risk</h3>
+            <ul id="laneSlaRisk"></ul>
+          </article>
+          <article class="lane">
+            <h3>Approval Blocked</h3>
+            <ul id="laneApprovalBlocked"></ul>
+          </article>
+          <article class="lane">
+            <h3>Manual Triage</h3>
+            <ul id="laneManualTriage"></ul>
+          </article>
+        </div>
+      </section>
+
       <section class="panel-grid">
         <article class="panel">
           <h2>Queue Distribution</h2>
@@ -77,6 +99,26 @@
             <tbody id="incidentRows"></tbody>
           </table>
         </div>
+      </section>
+
+      <section class="panel">
+        <h2>Approval Gate</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Incident</th>
+                <th>Missing Approvals</th>
+                <th>Current Approvals</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="approvalGateRows"></tbody>
+          </table>
+        </div>
+        <p class="hint" id="approvalGateHint">
+          Select request actions to draft outreach for missing approvers.
+        </p>
       </section>
     </main>
 
