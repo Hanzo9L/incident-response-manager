@@ -1,15 +1,32 @@
-import { useMemo, useState } from "react";
+import { Suspense, lazy, useMemo, useState } from "react";
 import { SidebarNav, type SectionId } from "./components/SidebarNav";
 import { escalations, runbooks } from "./data/mockData";
 import type { Severity } from "./types/models";
-import { AutomationScreen } from "./screens/AutomationScreen";
-import { CoverageScreen } from "./screens/CoverageScreen";
-import { DecisionBriefScreen } from "./screens/DecisionBriefScreen";
-import { EscalationsScreen } from "./screens/EscalationsScreen";
-import { MetricsScreen } from "./screens/MetricsScreen";
-import { MissionControlScreen } from "./screens/MissionControlScreen";
-import { RunbooksScreen } from "./screens/RunbooksScreen";
-import { ToolingScreen } from "./screens/ToolingScreen";
+
+const MissionControlScreen = lazy(() =>
+  import("./screens/MissionControlScreen").then((module) => ({ default: module.MissionControlScreen })),
+);
+const EscalationsScreen = lazy(() =>
+  import("./screens/EscalationsScreen").then((module) => ({ default: module.EscalationsScreen })),
+);
+const RunbooksScreen = lazy(() =>
+  import("./screens/RunbooksScreen").then((module) => ({ default: module.RunbooksScreen })),
+);
+const CoverageScreen = lazy(() =>
+  import("./screens/CoverageScreen").then((module) => ({ default: module.CoverageScreen })),
+);
+const ToolingScreen = lazy(() =>
+  import("./screens/ToolingScreen").then((module) => ({ default: module.ToolingScreen })),
+);
+const MetricsScreen = lazy(() =>
+  import("./screens/MetricsScreen").then((module) => ({ default: module.MetricsScreen })),
+);
+const AutomationScreen = lazy(() =>
+  import("./screens/AutomationScreen").then((module) => ({ default: module.AutomationScreen })),
+);
+const DecisionBriefScreen = lazy(() =>
+  import("./screens/DecisionBriefScreen").then((module) => ({ default: module.DecisionBriefScreen })),
+);
 
 const sectionTitle: Record<SectionId, string> = {
   "mission-control": "Mission Control",
@@ -97,7 +114,15 @@ function App() {
             One place to see coverage, risk, escalations, referrals, tooling health, and leadership-ready updates.
           </p>
         </header>
-        {renderContent()}
+        <Suspense
+          fallback={
+            <div className="rounded-xl border border-slate-800 bg-slate-900 p-6 text-sm text-slate-300">
+              Loading section...
+            </div>
+          }
+        >
+          {renderContent()}
+        </Suspense>
       </main>
     </div>
   );
