@@ -1,0 +1,156 @@
+[
+  {
+    "incident_id": "INC-001",
+    "priority": "P0",
+    "score": 141,
+    "queue": "abuse_operations",
+    "assignee": "chris",
+    "escalate_to": [
+      "Safeguards",
+      "Policy",
+      "Product",
+      "Legal"
+    ],
+    "compliance_flags": [
+      {
+        "framework": "EU_DSA",
+        "confidence": "medium",
+        "reason": "Possible systemic risk or illegal content pattern",
+        "recommendation": "Route for policy review and regulatory logging check"
+      }
+    ],
+    "enrichment": {
+      "summary": "coordinated_abuse incident in US region",
+      "triage_reasons": [
+        "severity_hint=sev1",
+        "users_impacted=420",
+        "risk_keywords_detected"
+      ],
+      "affected_users": 420,
+      "suggested_next_actions": [
+        "Confirm immediate containment",
+        "Validate policy applicability",
+        "Publish stakeholder update in 30 minutes"
+      ],
+      "similar_incidents": []
+    }
+  },
+  {
+    "incident_id": "INC-002",
+    "priority": "P2",
+    "score": 73,
+    "queue": "abuse_operations",
+    "assignee": "devin",
+    "escalate_to": [
+      "Safeguards",
+      "Comms"
+    ],
+    "compliance_flags": [],
+    "enrichment": {
+      "summary": "impersonation incident in EU region",
+      "triage_reasons": [
+        "severity_hint=sev2",
+        "users_impacted=75",
+        "risk_keywords_detected"
+      ],
+      "affected_users": 75,
+      "suggested_next_actions": [
+        "Confirm immediate containment",
+        "Validate policy applicability",
+        "Publish stakeholder update in 30 minutes"
+      ],
+      "similar_incidents": []
+    }
+  },
+  {
+    "incident_id": "INC-003",
+    "priority": "P2",
+    "score": 80,
+    "queue": "platform_reliability",
+    "assignee": "erin",
+    "escalate_to": [
+      "Safeguards"
+    ],
+    "compliance_flags": [],
+    "enrichment": {
+      "summary": "tooling incident in Global region",
+      "triage_reasons": [
+        "severity_hint=sev2",
+        "on_call_tooling_degraded=true",
+        "risk_keywords_detected"
+      ],
+      "affected_users": 0,
+      "suggested_next_actions": [
+        "Confirm immediate containment",
+        "Validate policy applicability",
+        "Publish stakeholder update in 30 minutes"
+      ],
+      "similar_incidents": []
+    }
+  },
+  {
+    "incident_id": "INC-004",
+    "priority": "P0",
+    "score": 210,
+    "queue": "high_risk_enforcement",
+    "assignee": "alice",
+    "escalate_to": [
+      "Safeguards",
+      "Policy",
+      "Product",
+      "Legal",
+      "LawEnforcementLiaison"
+    ],
+    "compliance_flags": [
+      {
+        "framework": "NCMEC",
+        "confidence": "high",
+        "reason": "Potential child safety exploitation signal detected",
+        "recommendation": "Escalate to legal and child safety specialist immediately"
+      }
+    ],
+    "enrichment": {
+      "summary": "safety_content incident in US region",
+      "triage_reasons": [
+        "severity_hint=sev0",
+        "users_impacted=18",
+        "risk_keywords_detected"
+      ],
+      "affected_users": 18,
+      "suggested_next_actions": [
+        "Confirm immediate containment",
+        "Validate policy applicability",
+        "Publish stakeholder update in 30 minutes"
+      ],
+      "similar_incidents": []
+    }
+  },
+  {
+    "incident_id": "INC-005",
+    "priority": "P1",
+    "score": 128,
+    "queue": "abuse_operations",
+    "assignee": "chris",
+    "escalate_to": [
+      "Safeguards",
+      "Policy",
+      "Product"
+    ],
+    "compliance_flags": [],
+    "enrichment": {
+      "summary": "fraud incident in APAC region",
+      "triage_reasons": [
+        "severity_hint=sev1",
+        "users_impacted=210",
+        "risk_keywords_detected"
+      ],
+      "affected_users": 210,
+      "suggested_next_actions": [
+        "Confirm immediate containment",
+        "Validate policy applicability",
+        "Publish stakeholder update in 30 minutes"
+      ],
+      "similar_incidents": []
+    }
+  }
+]

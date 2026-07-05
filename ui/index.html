@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safeguards Ops Dashboard Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Safeguards Ops Dashboard</h1>
+      <p>Near-real-time incident operations and escalation health</p>
+    </header>
+
+    <main class="container">
+      <section class="cards" id="summaryCards"></section>
+
+      <section class="panel-grid">
+        <article class="panel">
+          <h2>Queue Distribution</h2>
+          <ul id="queueDistribution"></ul>
+        </article>
+
+        <article class="panel">
+          <h2>Priority Distribution</h2>
+          <ul id="priorityDistribution"></ul>
+        </article>
+
+        <article class="panel">
+          <h2>Escalation Partners</h2>
+          <ul id="escalationPartners"></ul>
+        </article>
+
+        <article class="panel">
+          <h2>Compliance Flags</h2>
+          <ul id="complianceFlags"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Operational Notes</h2>
+        <p id="operationalNotes"></p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>Demo UI for Incident Response Manager application package.</small>
+    </footer>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

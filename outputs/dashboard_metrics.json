@@ -1,0 +1,29 @@
+{
+  "generated_at_utc": "2026-07-05T20:44:16.166435+00:00",
+  "total_incidents": 5,
+  "high_urgency_count": 3,
+  "high_urgency_rate": 60.0,
+  "queue_distribution": {
+    "abuse_operations": 3,
+    "platform_reliability": 1,
+    "high_risk_enforcement": 1
+  },
+  "priority_distribution": {
+    "P0": 2,
+    "P2": 2,
+    "P1": 1
+  },
+  "escalation_partner_mentions": {
+    "Safeguards": 5,
+    "Policy": 3,
+    "Product": 3,
+    "Legal": 2,
+    "Comms": 1,
+    "LawEnforcementLiaison": 1
+  },
+  "compliance_flag_counts": {
+    "EU_DSA": 1,
+    "NCMEC": 1
+  },
+  "runtime_seconds": 0.000351
+}
