@@ -71,6 +71,52 @@ npm run build
 9. Open **Metrics** and discuss trend and leadership narrative.
 10. Open **Automation** and sort the backlog by impact score.
 
+## Process flow
+
+```mermaid
+flowchart LR
+intake[CaseIntake] --> normalize[SignalNormalization]
+normalize --> triage[TriageAndSeverityProposal]
+triage --> assignment[OwnerAssignmentAndSLATimer]
+assignment --> xfn[CrossFunctionalCoordination]
+xfn --> policyAssist[PolicyAssistSignalCheck]
+policyAssist --> decisionNode{ReferralCriteriaMet}
+decisionNode -->|No| mitigation[MitigationAndMonitoring]
+decisionNode -->|Yes| legalReview[LegalReviewRequired]
+legalReview --> decisionOwner[HumanDecisionOwner]
+decisionOwner --> leadershipBrief[LeadershipBriefDraft]
+leadershipBrief --> closeout[CloseoutAndRunbookLogging]
+```
+
+## Decision tree
+
+```mermaid
+flowchart TD
+start[EscalationRecordOpened] --> severity{SeverityLevel}
+severity -->|High| highPath[EngagePolicyLegalProductComms]
+severity -->|Medium| mediumPath[SafeguardsAndEngineeringReview]
+severity -->|Low| lowPath[MonitorAndShortCycleReview]
+highPath --> referralCheck{ReferralReviewRequired}
+mediumPath --> referralCheck
+lowPath --> referralCheck
+referralCheck -->|Yes| humanGate[HumanLegalDecisionGate]
+referralCheck -->|No| mitigationPath[ProceedWithMitigation]
+humanGate --> criteriaStatus{CriteriaComplete}
+criteriaStatus -->|No| evidenceLoop[CollectMissingEvidence]
+evidenceLoop --> humanGate
+criteriaStatus -->|Yes| outcomeLog[ReferralOutcomeLogged]
+mitigationPath --> updateCycle[LeadershipUpdateAndNextDecision]
+outcomeLog --> updateCycle
+updateCycle --> endNode[CaseClosedWithAuditTrail]
+```
+
+### Diagram legend
+
+- **Process flow boxes** represent primary operational stages from intake to closeout.
+- **Decision diamonds** represent conditional checkpoints that alter the path.
+- **Human decision gate** indicates steps that remain human-owned (especially legal/referral outcomes).
+- **Loop back arrows** indicate evidence collection or re-review before proceeding.
+
 ## Mapping to job requirements
 
 | Job Requirement                    | Prototype Feature                           |
