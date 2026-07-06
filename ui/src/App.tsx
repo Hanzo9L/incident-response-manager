@@ -27,6 +27,9 @@ const AutomationScreen = lazy(() =>
 const DecisionBriefScreen = lazy(() =>
   import("./screens/DecisionBriefScreen").then((module) => ({ default: module.DecisionBriefScreen })),
 );
+const ProcessFlowScreen = lazy(() =>
+  import("./screens/ProcessFlowScreen").then((module) => ({ default: module.ProcessFlowScreen })),
+);
 
 const sectionPrefetchers: Record<SectionId, () => Promise<unknown>> = {
   "mission-control": () => import("./screens/MissionControlScreen"),
@@ -37,6 +40,7 @@ const sectionPrefetchers: Record<SectionId, () => Promise<unknown>> = {
   metrics: () => import("./screens/MetricsScreen"),
   automation: () => import("./screens/AutomationScreen"),
   "decision-brief": () => import("./screens/DecisionBriefScreen"),
+  "process-flow": () => import("./screens/ProcessFlowScreen"),
 };
 
 const likelyNextSections: Record<SectionId, SectionId[]> = {
@@ -48,6 +52,7 @@ const likelyNextSections: Record<SectionId, SectionId[]> = {
   metrics: ["automation", "decision-brief"],
   automation: ["metrics", "coverage"],
   "decision-brief": ["escalations", "metrics"],
+  "process-flow": ["escalations", "automation"],
 };
 
 const sectionTitle: Record<SectionId, string> = {
@@ -59,6 +64,7 @@ const sectionTitle: Record<SectionId, string> = {
   metrics: "Metrics and Leadership Reporting",
   automation: "Automation Backlog",
   "decision-brief": "Decision Brief Generator",
+  "process-flow": "Process Flow and Decision Tree",
 };
 
 function App() {
@@ -84,7 +90,7 @@ function App() {
   const prefetched = useRef<Set<SectionId>>(new Set());
 
   useEffect(() => {
-    const targets: SectionId[] = ["escalations", "coverage", "decision-brief", "metrics"];
+    const targets: SectionId[] = ["escalations", "coverage", "decision-brief", "metrics", "process-flow"];
     const loadTargets = () => {
       targets.forEach((id) => {
         if (prefetched.current.has(id)) return;
@@ -156,6 +162,8 @@ function App() {
         return <AutomationScreen />;
       case "decision-brief":
         return <DecisionBriefScreen escalations={escalations} />;
+      case "process-flow":
+        return <ProcessFlowScreen />;
       default:
         return <MissionControlScreen />;
     }

@@ -4,6 +4,7 @@ import {
   BriefcaseBusiness,
   ClipboardList,
   Gauge,
+  GitBranch,
   Radar,
   Route,
   Wrench,
@@ -18,7 +19,8 @@ export type SectionId =
   | "tooling"
   | "metrics"
   | "automation"
-  | "decision-brief";
+  | "decision-brief"
+  | "process-flow";
 
 const navItems: { id: SectionId; label: string; icon: ComponentType<{ className?: string }> }[] = [
   { id: "mission-control", label: "Mission Control", icon: Gauge },
@@ -29,6 +31,7 @@ const navItems: { id: SectionId; label: string; icon: ComponentType<{ className?
   { id: "metrics", label: "Metrics", icon: Route },
   { id: "automation", label: "Automation", icon: Bot },
   { id: "decision-brief", label: "Decision Brief", icon: BriefcaseBusiness },
+  { id: "process-flow", label: "Process Flow", icon: GitBranch },
 ];
 
 type Props = {
