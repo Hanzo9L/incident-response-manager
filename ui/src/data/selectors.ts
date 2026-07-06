@@ -48,12 +48,16 @@ export function getRunbookById(id: string): Runbook {
 
 export function missionControlCards() {
   const sev = countEscalationsBySeverity(escalations);
+  const latestMetrics = metricsTrend[metricsTrend.length - 1];
   return {
     activeSensitiveEscalations: sev,
     responseHealth: {
       medianFirstResponse: "11 minutes",
       target: "15 minutes",
       slaStatus: "On target",
+      slaMisses: latestMetrics.slaMisses,
+      firstResponseMinutes: latestMetrics.firstResponseMinutes,
+      highSeverityOpen: sev.high,
     },
     openToolingIssues: {
       active: toolingIssues.length,

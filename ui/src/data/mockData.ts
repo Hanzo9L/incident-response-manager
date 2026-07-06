@@ -14,6 +14,25 @@ export const onCallInfo = {
   status: "Active",
 };
 
+export const caseIntakeSources = [
+  {
+    source: "User reports",
+    detail: "Reports submitted from safety/report forms are normalized into escalation records.",
+  },
+  {
+    source: "Guardrail alerts",
+    detail: "Automated detection signals create draft escalations for on-call triage.",
+  },
+  {
+    source: "Trust Ops queue",
+    detail: "Analyst-discovered patterns are promoted to escalations when thresholds are met.",
+  },
+  {
+    source: "Internal tooling alerts",
+    detail: "Tooling degradation or queue failures open operational escalations impacting response.",
+  },
+];
+
 export const escalations: Escalation[] = [
   {
     id: "ESC-1048",
